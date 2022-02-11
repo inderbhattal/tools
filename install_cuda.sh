@@ -2,7 +2,7 @@ echo "Downloading CUDA"
 wget https://developer.download.nvidia.com/compute/cuda/11.6.0/local_installers/cuda_11.6.0_510.39.01_linux.run
 
 echo "Installing CUDA"
-sh cuda_11.6.0_510.39.01_linux.run --silent
+sudo sh cuda_11.6.0_510.39.01_linux.run --silent
 
 echo "Setting CUDA path variables"
 
