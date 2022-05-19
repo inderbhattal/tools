@@ -120,14 +120,6 @@ def install_ide():
         ide_folder_path = ide_folders.get(ide_name)
         ide_properties_file_path = os.path.join(ide_folder_path, os.path.join("bin", "idea.properties"))
 
-        # saved_ide_properties_file_path = os.path.join(ide_root_dir, "idea.properties")
-        # if os.path.isfile(ide_properties_file_path):
-        #     with open(ide_properties_file_path) as file:
-        #         data = file.read()
-        #
-        #         with open(saved_ide_properties_file_path, "w") as new_file:
-        #             new_file.write(data)
-
         logger.info(f"Removing contents of: {ide_folder_path}")
         shutil.rmtree(ide_folder_path)
 
@@ -149,21 +141,8 @@ def install_ide():
 
         amend_ide_config_file(ide_properties_file_path, ide_name)
 
-        # logger.info(f"Renaming default file properties at: {ide_properties_file_path}")
-        # os.rename(ide_properties_file_path, f"{ide_properties_file_path}.ori")
-        #
-        # logger.info(f"Writing saved config to: {ide_properties_file_path}")
-        # if os.path.isfile(saved_ide_properties_file_path):
-        #     with open(saved_ide_properties_file_path) as file:
-        #         data = file.read()
-        #
-        #         with open(ide_properties_file_path, "w") as new_file:
-        #             new_file.write(data)
-
     clean_ide_install_files(ide_tar_file_paths)
 
 
 if __name__ == "__main__":
     install_ide()
-
-    # amend_ide_config_file("/mnt/SSD-1/ide/webstorm/bin/idea.properties.ori", "webstorm")
