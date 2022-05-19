@@ -7,7 +7,7 @@ echo "Installing build-essential packages"
 apt install -y build-essential
 
 echo "Installing gfw firewall"
-sh ./install_firwall.sh
+sh ./install_firewall.sh
 
 echo "Now Blacklisting Nouveau drivers"
 sh ./blacklist_nouveau.sh
@@ -24,8 +24,8 @@ sh ./install_docker.sh
 echo "Installing gnome-tweaks"
 sh ./install_gnome_tweak_tool.sh
 
-echo "Installing CUDA"
-sh ./install_cuda.sh
+# echo "Installing CUDA"
+# sh ./install_cuda.sh
 
 echo "Installing Spotify"
 sh ./install_spotify.sh
