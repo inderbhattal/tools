@@ -2,4 +2,5 @@ echo "Installing VLAN package"
 
 sudo apt -y install vlan
 
-sudo apt install linux-modules-extra-raspi
+echo "Installing kernel modules"
+sudo apt -y install linux-modules-extra-raspi
