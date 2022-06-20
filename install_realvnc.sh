@@ -17,3 +17,11 @@ sudo ln /usr/lib/aarch64-linux-gnu/libmmal_util.so /usr/lib/libmmal_util.so.0
 sudo ln /usr/lib/aarch64-linux-gnu/libmmal_vc_client.so /usr/lib/libmmal_vc_client.so.0
 sudo ln /usr/lib/aarch64-linux-gnu/libvcsm.so /usr/lib/libvcsm.so.0
 sudo ln /usr/lib/aarch64-linux-gnu/libcontainers.so /usr/lib/libcontainers.so.0
+
+echo "Removing installer!"
+rm VNC-Server-6.9.1-Linux-ARM64.deb
+
+sudo systemctl enable vncserver-virtuald.service
+sudo systemctl enable vncserver-x11-serviced.service
+sudo systemctl start vncserver-virtuald.service
+sudo systemctl start vncserver-x11-serviced.service
