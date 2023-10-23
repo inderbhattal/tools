@@ -8,6 +8,30 @@ logger = get_logger()
 
 root_dir = "/mnt/SSD-1"
 ide_root_dir = f"{root_dir}/ide"
+ide_config_root_dir = f"{root_dir}/ide_config"
+
+idea_properties_file_names = {
+    "clion": f"{ide_config_root_dir}/.CLion",
+    "datagrip": f"{ide_config_root_dir}/.DataGrip",
+    "goland": f"{ide_config_root_dir}/.GoLand",
+    "idea-iu": f"{ide_config_root_dir}/.IntelliJIdea",
+    "pycharm": f"{ide_config_root_dir}/.Pycharm",
+    "webstorm": f"{ide_config_root_dir}/.Webstorm",
+}
+
+idea_log_path = "idea.log.path="
+idea_config_path = "idea.config.path="
+idea_system_path = "idea.system.path="
+idea_plugins_path = "idea.plugins.path="
+
+ide_names_config_folder_name = {
+    "clion": ".CLion",
+    "goland": ".GoLand",
+    "pycharm": ".PyCharm",
+    "webstorm": ".WebStorm",
+    "datagrip": ".DataGrip",
+    "idea-iu": ".IntelliJIdea",
+}
 
 
 def get_ide_tar_paths():
@@ -43,6 +67,29 @@ def clean_ide_install_files(ide_tar_file_paths):
         logger.info(f"Deleting file: {ide_tar_file_path}")
 
         os.remove(ide_tar_file_path)
+
+
+def amend_ide_config_file(ide_properties_file_path, ide_name):
+    logger.info(f"Creating backup of properties file: {ide_properties_file_path}")
+
+    ide_properties_file_path_bckup = f"{ide_properties_file_path}.ori"
+    shutil.copyfile(ide_properties_file_path, ide_properties_file_path_bckup)
+
+    idea_properties = []
+    with open(ide_properties_file_path) as propertis_file:
+        idea_properties = propertis_file.readlines()
+
+    if idea_properties:
+        for index, line in enumerate(idea_properties):
+            if idea_config_path in line or idea_system_path in line:
+                idea_properties[index] = f"{line.replace('#', '').replace('${user.home}', f'{ide_config_root_dir}').strip()}\n"
+            elif idea_plugins_path in line:
+                idea_properties[index] = f"{line.replace('#', '').replace('${idea.config.path}', f'{ide_config_root_dir}/{ide_names_config_folder_name.get(ide_name)}').strip()}\n"
+            elif idea_log_path in line:
+                idea_properties[index] = f"{line.replace('#', '').replace('${idea.system.path}', f'{ide_config_root_dir}/{ide_names_config_folder_name.get(ide_name)}').strip()}\n"
+
+    with open(ide_properties_file_path, "w") as propertis_file:
+        propertis_file.writelines(idea_properties)
 
 
 def install_ide():
@@ -86,7 +133,7 @@ def install_ide():
 
         ide_tar_file_path = ide_tar_file_paths_dict[ide_name]
         logger.info(f"Extracting contents of: {ide_tar_file_path}")
-
+        ide_tar_file_path = ide_tar_file_paths_dict[ide_name]
         ide_tar = tarfile.open(ide_tar_file_path)
         ide_tar.extractall(ide_root_dir)
 
@@ -99,6 +146,8 @@ def install_ide():
 
         logger.info(f"Renaming old folder {new_folder_path_extracted} -> {new_folder_path}")
         os.rename(new_folder_path_extracted, new_folder_path)
+
+        amend_ide_config_file(ide_properties_file_path, ide_name)
 
         # logger.info(f"Renaming default file properties at: {ide_properties_file_path}")
         # os.rename(ide_properties_file_path, f"{ide_properties_file_path}.ori")
@@ -116,3 +165,5 @@ def install_ide():
 
 if __name__ == "__main__":
     install_ide()
+
+    # amend_ide_config_file("/mnt/SSD-1/ide/webstorm/bin/idea.properties.ori", "webstorm")
