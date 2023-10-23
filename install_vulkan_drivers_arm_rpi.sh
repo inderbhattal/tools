@@ -1,3 +1,5 @@
+#!/bin/bash
+
 sudo apt-get update && sudo apt-get upgrade
 # -y install dependencies
 sudo apt-get -y install libxcb-randr0-dev libxrandr-dev

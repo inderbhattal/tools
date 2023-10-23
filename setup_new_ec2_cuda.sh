@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Now running setup scripts!"
 
 echo "Running upgrade for all packages"

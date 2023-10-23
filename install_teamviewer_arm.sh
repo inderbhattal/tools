@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Installing Teamviewer"
 
 sudo apt-get update && sudo apt-get upgrade

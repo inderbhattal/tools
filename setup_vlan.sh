@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Installing VLAN package"
 
 sudo apt -y install vlan

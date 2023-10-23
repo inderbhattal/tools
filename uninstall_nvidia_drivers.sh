@@ -1,6 +1,8 @@
+#!/bin/bash
+
 echo "Uninstalling Nvidia Drivers!"
 
-sudo service stop gdm3
+sudo service gdm3 stop
 
 sudo dpkg -P $(dpkg -l | grep nvidia-driver | awk '{print $2}')
 

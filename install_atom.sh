@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Running upgrade for all packages"
 sudo apt update && sudo apt -y upgrade
 

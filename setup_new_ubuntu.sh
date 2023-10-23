@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Now running setup scripts!"
 
 echo "Running upgrade for all packages"
@@ -12,8 +14,8 @@ sh ./install_firewall.sh
 echo "Now Blacklisting Nouveau drivers"
 sh ./blacklist_nouveau.sh
 
-echo "Installing Atom Editor"
-sh ./install_atom.sh
+# echo "Installing Atom Editor"
+# sh ./install_atom.sh
 
 echo "Installing Chrome"
 sh ./install_chrome.sh
@@ -21,14 +23,17 @@ sh ./install_chrome.sh
 echo "Installing Docker"
 sh ./install_docker.sh
 
-echo "Installing gnome-tweaks"
-sh ./install_gnome_tweak_tool.sh
+# echo "Installing gnome-tweaks"
+# sh ./install_gnome_tweak_tool.sh
 
 # echo "Installing CUDA"
 # sh ./install_cuda.sh
 
-echo "Installing Spotify"
-sh ./install_spotify.sh
+# echo "Installing Spotify"
+# sh ./install_spotify.sh
+
+echo "Updating Snap"
+sh ./update_snap.sh
 
 
 echo "Done with setup!"
@@ -37,4 +42,4 @@ sleep 5s
 
 echo "Restarting in 3sec!"
 sleep 3s
-sudo reboot
+# sudo reboot

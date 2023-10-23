@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Restarting Pulse audio services!"
 
 systemctl --user restart pulseaudio.service

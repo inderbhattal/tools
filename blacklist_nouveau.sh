@@ -1,3 +1,5 @@
+#!/bin/bash
+
 touch /etc/modprobe.d/blacklist-nouveau.conf
 
 echo "blacklist nouveau" >> /etc/modprobe.d/blacklist-nouveau.conf

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Killing Snap Store"
 sudo killall snap-store
 

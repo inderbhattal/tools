@@ -1,2 +1,3 @@
-sudo passwd root
+#!/bin/bash
 
+sudo passwd root
