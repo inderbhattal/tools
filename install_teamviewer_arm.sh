@@ -16,4 +16,5 @@ wget https://download.teamviewer.com/download/linux/teamviewer-host_armhf.deb
 echo "Running Installer..."
 sudo dpkg -i teamviewer-host_armhf.deb
 
+echo "Removing Installer..."
 rm teamviewer-host_armhf.deb
