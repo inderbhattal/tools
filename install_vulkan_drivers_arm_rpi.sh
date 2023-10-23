@@ -17,8 +17,10 @@ sudo apt-get -y install libwayland-egl-backend-dev
 sudo apt-get -y install valgrind libzstd-dev vulkan-tools
 sudo apt-get -y install git build-essential bison flex ninja-build
 sudo apt-get -y install python-mako vulkan-utils
-sudo apt-get -y install python3-mako
+# sudo apt-get -y install python3-mako
 sudo apt-get -y install pkg-config
+sudo apt -y install llvm
+
 
 sudo apt-get -y install libxcb-glx0-dev libx11-xcb-dev libxcb-dri2-0-dev
 sudo apt-get -y install libxcb-dri3-dev libxcb-present-dev
@@ -27,10 +29,9 @@ sudo apt-get -y install libxcb-dri3-dev libxcb-present-dev
 # sudo rm -rf /home/pi/mesa_vulkan
 # -y install meson
 sudo apt purge meson -y
-sudo pip3 -y install meson
+# sudo pip3 -y install meson
 sudo apt -y install meson
 
-sudo apt -y install llvm
 
 # -y install mako
 sudo pip3 -y install mako
@@ -40,7 +41,7 @@ git clone -b 20.3 https://gitlab.freedesktop.org/mesa/mesa.git ~/mesa_vulkan
 # build v3dv (± 30 min)
 cd ~/mesa_vulkan
 
-CFLAGS="-mcpu=cortex-a72" CXXFLAGS="-mcpu=cortex-a72" meson --prefix /usr -D platforms=x11 -D vulkan-drivers=broadcom -D dri-drivers= -D gallium-drivers=kmsro,v3d,vc4 -D buildtype=release build
+CFLAGS="-mcpu=cortex-a72" CXXFLAGS="-mcpu=cortex-a72" meson --libdir lib -D platforms=x11 -D vulkan-drivers=broadcom -D dri-drivers= -D gallium-drivers=v3d,kmsro,vc4 -D buildtype=release build
 
 sudo ninja -C build -j4
 
