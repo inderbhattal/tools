@@ -16,7 +16,7 @@ echo "Running Installer..."
 sudo dpkg -i teamviewer-host_armhf.deb
 
 echo "Fixing deps..."
-sudo apt-get -f install
+sudo apt-get -yf install
 
 echo "Removing Installer..."
 rm teamviewer-host_armhf.deb
