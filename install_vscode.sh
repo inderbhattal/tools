@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "Making vscode symlinks"
+sudo ln -s /mnt/SSD-1/vscode/.vscode/ ~/.vscode
+
+echo "Getting vscode deb install file"
+wget https://go.microsoft.com/fwlink/?LinkID=760868 -O code.deb
+
+echo "Installing VSCode"
+sudo apt install ./code.deb
