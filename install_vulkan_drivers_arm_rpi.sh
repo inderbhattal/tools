@@ -30,6 +30,8 @@ sudo apt purge meson -y
 sudo pip3 -y install meson
 sudo apt -y install meson
 
+sudo apt -y install llvm
+
 # -y install mako
 sudo pip3 -y install mako
 # -y install v3dv
@@ -39,5 +41,7 @@ git clone -b 20.3 https://gitlab.freedesktop.org/mesa/mesa.git ~/mesa_vulkan
 cd ~/mesa_vulkan
 
 CFLAGS="-mcpu=cortex-a72" CXXFLAGS="-mcpu=cortex-a72" meson --prefix /usr -D platforms=x11 -D vulkan-drivers=broadcom -D dri-drivers= -D gallium-drivers=kmsro,v3d,vc4 -D buildtype=release build
+
+sudo ninja -C build -j4
 
 sudo ninja -C build -y install
