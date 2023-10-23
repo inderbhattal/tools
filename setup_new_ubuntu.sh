@@ -20,6 +20,15 @@ sh ./blacklist_nouveau.sh
 echo "Installing Chrome"
 sh ./install_chrome.sh
 
+echo "Installing vscode"
+sh ./install_vscode.sh
+
+echo "Installing rust"
+sh ./install_rust.sh
+
+echo "Installing Nvidia support libs"
+sh ./install_nvidia_drivers.sh
+
 echo "Installing Docker"
 sh ./install_docker.sh
 
@@ -34,6 +43,9 @@ sh ./install_docker.sh
 
 echo "Updating Snap"
 sh ./update_snap.sh
+
+echo "Setting up ssh keys"
+sh ./setup_ssh.sh
 
 
 echo "Done with setup!"
