@@ -10,6 +10,8 @@ root_dir = "/mnt/SSD-1"
 ide_root_dir = f"{root_dir}/ide"
 ide_config_root_dir = f"{root_dir}/ide_config"
 
+idea_properties_file_name = "idea.properties"
+
 idea_properties_file_names = {
     "clion": f"{ide_config_root_dir}/.CLion",
     "datagrip": f"{ide_config_root_dir}/.DataGrip",
@@ -31,6 +33,42 @@ ide_names_config_folder_name = {
     "webstorm": ".WebStorm",
     "datagrip": ".DataGrip",
     "idea-iu": ".IntelliJIdea",
+}
+
+ide_vm_options_file_names = {
+    "clion": "clion64.vmoptions",
+    "datagrip": "datagrip64.vmoptions",
+    "goland": "goland64.vmoptions",
+    "idea-iu": "idea64.vmoptions",
+    "pycharm": "pycharm64.vmoptions",
+    "webstorm": "webstorm64.vmoptions",
+}
+
+ide_vm_options_changes = {
+    "clion": {
+        "-Xms": "-Xms256m",
+        "-Xmx": "-Xmx2048m"
+    },
+    "datagrip": {
+        "-Xms": "-Xms128m",
+        "-Xmx": "-Xmx1536m"
+    },
+    "goland": {
+        "-Xms": "-Xms256m",
+        "-Xmx": "-Xmx2048m"
+    },
+    "idea-iu": {
+        "-Xms": "-Xms256m",
+        "-Xmx": "-Xmx2048m"
+    },
+    "pycharm": {
+        "-Xms": "-Xms256m",
+        "-Xmx": "-Xmx2048m"
+    },
+    "webstorm": {
+        "-Xms": "-Xms128m",
+        "-Xmx": "-Xmx1536m"
+    },
 }
 
 
@@ -62,46 +100,76 @@ def get_ide_folders():
     return ide_folders_paths
 
 
-def clean_ide_install_files(ide_tar_file_paths):
+def clean_ide_install_files(ide_tar_file_paths: list):
     for ide_tar_file_path in ide_tar_file_paths:
         logger.info(f"Deleting file: {ide_tar_file_path}")
 
         os.remove(ide_tar_file_path)
 
 
-def amend_ide_config_file(ide_properties_file_path, ide_name):
+def amend_ide_config_file(ide_folder_path: str, ide_name: str):
+    ide_properties_file_path = os.path.join(ide_folder_path, os.path.join("bin", idea_properties_file_name))
+
     logger.info(f"Creating backup of properties file: {ide_properties_file_path}")
 
     ide_properties_file_path_bckup = f"{ide_properties_file_path}.ori"
     shutil.copyfile(ide_properties_file_path, ide_properties_file_path_bckup)
 
-    idea_properties = []
     with open(ide_properties_file_path) as propertis_file:
-        idea_properties = propertis_file.readlines()
+        ide_properties = propertis_file.readlines()
 
-    if idea_properties:
-        for index, line in enumerate(idea_properties):
-            if idea_config_path in line or idea_system_path in line:
-                idea_properties[index] = f"{line.replace('#', '').replace('${user.home}', f'{ide_config_root_dir}').strip()}\n"
-            elif idea_plugins_path in line:
-                idea_properties[index] = f"{line.replace('#', '').replace('${idea.config.path}', f'{ide_config_root_dir}/{ide_names_config_folder_name.get(ide_name)}').strip()}\n"
-            elif idea_log_path in line:
-                idea_properties[index] = f"{line.replace('#', '').replace('${idea.system.path}', f'{ide_config_root_dir}/{ide_names_config_folder_name.get(ide_name)}').strip()}\n"
+    if ide_properties:
+        for index, config_line in enumerate(ide_properties):
+            if idea_config_path in config_line or idea_system_path in config_line:
+                ide_properties[index] = f"{config_line.replace('#', '').replace('${user.home}', f'{ide_config_root_dir}').strip()}\n"
+            elif idea_plugins_path in config_line:
+                ide_properties[index] = f"{config_line.replace('#', '').replace('${idea.config.path}', f'{ide_config_root_dir}/{ide_names_config_folder_name.get(ide_name)}').strip()}\n"
+            elif idea_log_path in config_line:
+                ide_properties[index] = f"{config_line.replace('#', '').replace('${idea.system.path}', f'{ide_config_root_dir}/{ide_names_config_folder_name.get(ide_name)}').strip()}\n"
 
     with open(ide_properties_file_path, "w") as propertis_file:
-        propertis_file.writelines(idea_properties)
+        propertis_file.writelines(ide_properties)
+
+
+def amend_ide_vm_options(ide_folder_path: str, ide_name: str):
+    logger.info(f"Amending VM Options for IDE: {ide_name}")
+
+    ide_vm_options_file_path = os.path.join(ide_folder_path, os.path.join("bin", ide_vm_options_file_names.get(ide_name)))
+
+    if not ide_vm_options_file_path or ide_vm_options_file_path == "":
+        logger.error(f"{ide_vm_options_file_path} is incorrect for ide: {ide_name}")
+        return
+
+    with open(ide_vm_options_file_path) as vm_options_file:
+        ide_vm_options = vm_options_file.readlines()
+
+    ide_vm_options_change = ide_vm_options_changes.get(ide_name)
+    for index, vm_option in enumerate(ide_vm_options):
+        if vm_option.startswith("-Xms"):
+            ide_vm_options[index] = f"{ide_vm_options_change.get('-Xms')}\n"
+        elif vm_option.startswith("-Xmx"):
+            ide_vm_options[index] = f"{ide_vm_options_change.get('-Xmx')}\n"
+
+            break
+
+    with open(ide_vm_options_file_path, "w") as propertis_file:
+        propertis_file.writelines(ide_vm_options)
 
 
 def install_ide():
-    ide_folders = get_ide_folders()
     ide_tar_file_paths = get_ide_tar_paths()
+    if not ide_tar_file_paths:
+        logger.warning("No IDE tar installations files found!")
+        return
+
+    ide_folders = get_ide_folders()
 
     for index, ide_tar_file_path in enumerate(ide_tar_file_paths):
         if "idea" in ide_tar_file_path:
             new_ide_tar_file_path = ide_tar_file_path.replace("ideaiu", "idea-iu")
             os.rename(ide_tar_file_path, new_ide_tar_file_path)
             ide_tar_file_paths[index] = new_ide_tar_file_path
-
+            
             break
 
     ide_tar_file_paths_dict = {}
@@ -109,28 +177,26 @@ def install_ide():
 
     for ide_folder_name in sorted_ide_folders:
         for ide_tar_file_path in ide_tar_file_paths:
+
             if ide_folder_name in ide_tar_file_path:
                 ide_tar_file_paths_dict[ide_folder_name] = ide_tar_file_path
-
                 break
 
-    for index, ide_name in enumerate(sorted_ide_folders):
+    for ide_name, ide_tar_file_path in ide_tar_file_paths_dict.items():
         logger.info(f"Processing ide: {ide_name}")
 
         ide_folder_path = ide_folders.get(ide_name)
-        ide_properties_file_path = os.path.join(ide_folder_path, os.path.join("bin", "idea.properties"))
 
         logger.info(f"Removing contents of: {ide_folder_path}")
         shutil.rmtree(ide_folder_path)
 
-        ide_tar_file_path = ide_tar_file_paths_dict[ide_name]
         logger.info(f"Extracting contents of: {ide_tar_file_path}")
         ide_tar_file_path = ide_tar_file_paths_dict[ide_name]
         ide_tar = tarfile.open(ide_tar_file_path)
         ide_tar.extractall(ide_root_dir)
 
         new_folder_name = ide_tar.getnames()[0]
-        new_folder_name_extracted = new_folder_name[: new_folder_name.index("/")]
+        new_folder_name_extracted = new_folder_name[: new_folder_name.index("/")] if "/" in new_folder_name else new_folder_name
         new_folder_path_extracted = os.path.join(ide_root_dir, new_folder_name_extracted)
 
         new_folder_name_w_no_punctuations = new_folder_name[: new_folder_name.rindex("-")].lower()
@@ -139,7 +205,9 @@ def install_ide():
         logger.info(f"Renaming old folder {new_folder_path_extracted} -> {new_folder_path}")
         os.rename(new_folder_path_extracted, new_folder_path)
 
-        amend_ide_config_file(ide_properties_file_path, ide_name)
+        amend_ide_config_file(ide_folder_path, ide_name)
+
+        amend_ide_vm_options(ide_folder_path, ide_name)
 
     clean_ide_install_files(ide_tar_file_paths)
 
