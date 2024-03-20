@@ -1,0 +1,14 @@
+[Unit]
+Description=Setup VLAN's
+After=network.target
+
+[Service]
+ExecStart=/home/vision/services/setup_vlans.sh
+WorkingDirectory=/home/vision/services
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
