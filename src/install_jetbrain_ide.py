@@ -32,6 +32,7 @@ ide_names_config_folder_name = {
     "pycharm": ".PyCharm",
     "webstorm": ".WebStorm",
     "datagrip": ".DataGrip",
+    "rustrover": ".RustRover",
     "idea-iu": ".IntelliJIdea",
 }
 
@@ -41,6 +42,7 @@ ide_vm_options_file_names = {
     "goland": "goland64.vmoptions",
     "idea-iu": "idea64.vmoptions",
     "pycharm": "pycharm64.vmoptions",
+    "rustrover": "rustrover64.vmoptions",
     "webstorm": "webstorm64.vmoptions",
 }
 
@@ -62,6 +64,10 @@ ide_vm_options_changes = {
         "-Xmx": "-Xmx2048m"
     },
     "pycharm": {
+        "-Xms": "-Xms256m",
+        "-Xmx": "-Xmx2048m"
+    },
+    "rustrover": {
         "-Xms": "-Xms256m",
         "-Xmx": "-Xmx2048m"
     },
@@ -134,7 +140,12 @@ def amend_ide_config_file(ide_folder_path: str, ide_name: str):
 def amend_ide_vm_options(ide_folder_path: str, ide_name: str):
     logger.info(f"Amending VM Options for IDE: {ide_name}")
 
-    ide_vm_options_file_path = os.path.join(ide_folder_path, os.path.join("bin", ide_vm_options_file_names.get(ide_name)))
+    ide_vm_options_file_name = ide_vm_options_file_names.get(ide_name, "")
+    if ide_vm_options_file_name == "":
+        logger.info(f"Skipping VM Options for IDE: {ide_name}")
+        return
+
+    ide_vm_options_file_path = os.path.join(ide_folder_path, os.path.join("bin", ide_vm_options_file_name))
 
     if not ide_vm_options_file_path or ide_vm_options_file_path == "":
         logger.error(f"{ide_vm_options_file_path} is incorrect for ide: {ide_name}")
