@@ -1,4 +1,4 @@
 #!/bin/bash
 
-sudo add-apt-repository universe
-sudo apt install gnome-tweaks
+sudo add-apt-repository -y universe
+sudo apt install -y gnome-tweaks
