@@ -3,11 +3,13 @@ Description=Setup VLAN's
 After=network.target
 
 [Service]
-ExecStart=/home/vision/services/setup_vlans.sh
+ExecStart=/usr/bin/sh /home/vision/services/setup_vlans.sh
 WorkingDirectory=/home/vision/services
 StandardOutput=inherit
 StandardError=inherit
-Restart=always
+Restart=on-failure
+StartLimitBurst=5
+StartLimitIntervalSec=10
 User=root
 
 [Install]
