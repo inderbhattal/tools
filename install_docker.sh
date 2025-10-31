@@ -18,3 +18,22 @@ echo \
 
 sudo apt-get update
 sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+
+echo "Stopping docker service"
+sudo systemctl stop docker
+
+sleep 3s
+
+sudo cp daemon.json /etc/docker
+
+sleep 1s
+
+sudo usermod -aG docker $USER
+
+sleep 2s
+
+newgrp docker
+
+sleep 3s
+
+sudo systemctl start docker
